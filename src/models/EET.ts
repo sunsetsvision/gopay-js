@@ -6,13 +6,12 @@
  * @year 2022
  */
 
-import axios from "axios";
-import { GoPay } from "..";
+import { GoPay } from "../factory/goPay";
 import { eet } from "../types/eet";
 
 export class Misc {
-  private __client: GoPay;
-    private __sufix = "/payments/payment";
+  public __client: GoPay;
+  public __sufix = "/payments/payment";
 
   constructor({ client }: eet.Constructor) {
     this.__client = client;

@@ -44,11 +44,10 @@ export class GoPay {
       data: params,
     });
 
-    if(res.status == 200){
+    if (res.status == 200) {
       return res.data;
-    }else {
-      if (this.__log) 
-        handleError(res.data);
+    } else {
+      if (this.__log) handleError(res.data);
     }
   }
 

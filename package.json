@@ -1,7 +1,7 @@
 {
   "name": "gopay-js",
   "version": "1.5.3",
-  "main": "index/index.ts",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "keywords": [
     "gopay",
@@ -9,6 +9,10 @@
     "payment-gateway",
     "payments"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/fronebdev/gopay-js.git"
+  },
   "author": "Froneb s.r.o. <hello@froneb.com>",
   "license": "MIT",
   "description": "The only functional library for GoPay payment gateway.",

@@ -6,7 +6,7 @@
  * @year 2022
  */
 
-import { GoPay } from "../factory/GoPay";
+import { GoPay } from "../factory/goPay";
 import { format } from "./public";
 
 export namespace misc {
