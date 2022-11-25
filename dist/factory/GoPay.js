@@ -15,7 +15,7 @@ const axios_1 = __importDefault(require("axios"));
 const helpers_1 = require("../helpers");
 class GoPay {
     constructor({ credentials, enviroment, log }) {
-        this.url = "https://gate.gopay.cz/api;";
+        this.url = "https://gate.gopay.cz/api";
         this.__log = log;
         this.credentials = credentials;
         if (enviroment == "sandbox") {
@@ -28,8 +28,9 @@ class GoPay {
         const params = new URLSearchParams();
         params.append("grant_type", "client_credentials");
         params.append("scope", "payment-create");
+        const url = this.url + "/oauth2/token";
         const res = await (0, axios_1.default)({
-            url: this.url + "/oauth2/token",
+            url,
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -51,7 +52,7 @@ class GoPay {
         const params = new URLSearchParams();
         params.append("grant_type", "client_credentials");
         params.append("scope", "payment-create");
-        const res = await (0, axios_1.default)({
+        const tokenRequest = {
             url: this.url + "/oauth2/token",
             method: "POST",
             headers: {
@@ -61,8 +62,16 @@ class GoPay {
                     new Buffer(this.credentials.clientID + ":" + this.credentials.clientSecret).toString("base64"),
             },
             data: params,
-        });
-        return res.data.access_token;
+        };
+        try {
+            console.log("Getting token", tokenRequest);
+            const res = await (0, axios_1.default)(tokenRequest);
+            return res.data.access_token;
+        }
+        catch (error) {
+            console.error("Problem creating the token", error);
+            throw error;
+        }
     }
     log() {
         return this.__log;

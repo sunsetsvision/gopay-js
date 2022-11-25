@@ -6,12 +6,12 @@
  * @year 2022
  */
 
-import axios from "axios";
+import axios, { Method } from "axios";
 import { createToken, handleError, with_gopay } from "../helpers";
 import { gopay } from "../types/gopay";
 
 export class GoPay {
-  public url: string = "https://gate.gopay.cz/api;";
+  public url: string = "https://gate.gopay.cz/api";
   public credentials: gopay.credentials;
   public __log: boolean;
 
@@ -30,9 +30,9 @@ export class GoPay {
     const params = new URLSearchParams();
     params.append("grant_type", "client_credentials");
     params.append("scope", "payment-create");
-
+    const url = this.url + "/oauth2/token";
     const res = await axios({
-      url: this.url + "/oauth2/token",
+      url,
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -56,9 +56,9 @@ export class GoPay {
     params.append("grant_type", "client_credentials");
     params.append("scope", "payment-create");
 
-    const res = await axios({
+    const tokenRequest = {
       url: this.url + "/oauth2/token",
-      method: "POST",
+      method: "POST" as Method,
       headers: {
         Accept: "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -69,9 +69,15 @@ export class GoPay {
           ).toString("base64"),
       },
       data: params,
-    });
-
-    return res.data.access_token;
+    };
+    try {
+      console.log("Getting token", tokenRequest);
+      const res = await axios(tokenRequest);
+      return res.data.access_token;
+    } catch (error) {
+      console.error("Problem creating the token", error);
+      throw error;
+    }
   }
 
   log() {

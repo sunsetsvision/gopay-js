@@ -6,7 +6,7 @@
  * @year 2022
  */
 
-import axios from "axios";
+import axios, { Method } from "axios";
 import { GoPay } from "../factory/goPay";
 import { handleError } from "../helpers";
 import { payments } from "../types/payments";
@@ -25,13 +25,19 @@ export class Payments {
    * @returns
    */
   async createPayment(data: payments.DefaultPayment) {
-    const res = await axios({
+    let token = "";
+    try {
+      token = await this.__client.getAccessToken();
+    } catch (error) {
+      console.error("Problem creating the token", error);
+    }
+    const paymentRequest = {
       url: this.__client.url + this.__sufix,
-      method: "POST",
+      method: "POST" as Method,
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + (await this.__client.getAccessToken()),
+        Authorization: "Bearer " + token,
       },
       //TODO: add additional params
       data: {
@@ -68,12 +74,19 @@ export class Payments {
           notification_url: data.callback.notification_url,
         },
       },
-    });
-
-    if (res.status == 200) {
-      return res.data;
-    } else {
-      if (this.__client.__log) handleError(res.data);
+    };
+    console.log("payment request", paymentRequest);
+    try {
+      console.log("sending request");
+      const res = await axios(paymentRequest);
+      console.log("sending res", res);
+      if (res.status == 200) {
+        return res.data;
+      } else {
+        if (this.__client.__log) handleError(res.data);
+      }
+    } catch (error) {
+      handleError(error as any);
     }
   }
 

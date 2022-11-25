@@ -24,13 +24,20 @@ class Payments {
      * @returns
      */
     async createPayment(data) {
-        const res = await (0, axios_1.default)({
+        let token = "";
+        try {
+            token = await this.__client.getAccessToken();
+        }
+        catch (error) {
+            console.error("Problem creating the token", error);
+        }
+        const paymentRequest = {
             url: this.__client.url + this.__sufix,
             method: "POST",
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                Authorization: "Bearer " + (await this.__client.getAccessToken()),
+                Authorization: "Bearer " + token,
             },
             //TODO: add additional params
             data: {
@@ -65,13 +72,22 @@ class Payments {
                     notification_url: data.callback.notification_url,
                 },
             },
-        });
-        if (res.status == 200) {
-            return res.data;
+        };
+        console.log("payment request", paymentRequest);
+        try {
+            console.log("sending request");
+            const res = await (0, axios_1.default)(paymentRequest);
+            console.log("sending res", res);
+            if (res.status == 200) {
+                return res.data;
+            }
+            else {
+                if (this.__client.__log)
+                    (0, helpers_1.handleError)(res.data);
+            }
         }
-        else {
-            if (this.__client.__log)
-                (0, helpers_1.handleError)(res.data);
+        catch (error) {
+            (0, helpers_1.handleError)(error);
         }
     }
     /**
