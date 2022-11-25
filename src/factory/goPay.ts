@@ -64,9 +64,7 @@ export class GoPay {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization:
           "Basic " +
-          Buffer.from(
-            this.credentials.clientID + ":" + this.credentials.clientSecret
-          ).toString("base64"),
+          createToken(this.credentials.clientID, this.credentials.clientSecret),
       },
       data: params,
     };
