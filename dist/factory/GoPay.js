@@ -59,7 +59,7 @@ class GoPay {
                 Accept: "application/json",
                 "Content-Type": "application/x-www-form-urlencoded",
                 Authorization: "Basic " +
-                    new Buffer(this.credentials.clientID + ":" + this.credentials.clientSecret).toString("base64"),
+                    Buffer.from(this.credentials.clientID + ":" + this.credentials.clientSecret).toString("base64"),
             },
             data: params,
         };
