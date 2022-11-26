@@ -12,8 +12,8 @@ export const with_gopay = (...args: any[]) =>
   chalk.blueBright("[GOPAY] ") + chalk.green(args.join(" "));
 
 export const createToken = (clientID: string, clientSecret: string) =>
-  new Buffer(clientID + ":" + clientSecret).toString("base64");
+  Buffer.from(clientID + ":" + clientSecret).toString("base64");
 
 export const handleError = (error: Error) => {
   console.log(error);
-}
+};

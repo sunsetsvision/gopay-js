@@ -75,11 +75,8 @@ export class Payments {
         },
       },
     };
-    console.log("payment request", paymentRequest);
     try {
-      console.log("sending request");
       const res = await axios(paymentRequest);
-      console.log("sending res", res);
       if (res.status == 200) {
         return res.data;
       } else {
