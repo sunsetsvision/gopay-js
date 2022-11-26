@@ -52,14 +52,16 @@ class GoPay {
         const params = new URLSearchParams();
         params.append("grant_type", "client_credentials");
         params.append("scope", "payment-create");
+        console.log(`Creating token from: "${this.credentials.clientID}" and "${this.credentials.clientSecret}"`);
+        const basicToken = (0, helpers_1.createToken)(this.credentials.clientID, this.credentials.clientSecret);
+        console.log(`Created token: "${basicToken}"`);
         const tokenRequest = {
             url: this.url + "/oauth2/token",
             method: "POST",
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/x-www-form-urlencoded",
-                Authorization: "Basic " +
-                    (0, helpers_1.createToken)(this.credentials.clientID, this.credentials.clientSecret),
+                Authorization: "Basic " + basicToken,
             },
             data: params,
         };
