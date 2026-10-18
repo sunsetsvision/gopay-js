@@ -6,8 +6,9 @@
  * @year 2022
  */
 
+import axios from "axios";
 import { GoPay } from "../factory/goPay";
-import { handleError, http } from "../helpers";
+import { handleError } from "../helpers";
 import { misc } from "../types/misc";
 
 export class Misc {
@@ -23,7 +24,7 @@ export class Misc {
    * @returns
    */
   async getAllowedMethodes(currency: string) {
-    const res = await http({
+    const res = await axios({
       url:
         this.__client.url +
         "/eshops/eshop/" +
@@ -51,7 +52,7 @@ export class Misc {
    * @returns
    */
   async accountStatement(data: misc.accountStatement) {
-    const res = await http({
+    const res = await axios({
       url: this.__client.url + "/accounts/account-statement",
       method: "POST",
       headers: {

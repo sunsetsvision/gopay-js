@@ -6,8 +6,12 @@
  * @author Froneb s.r.o. <hello@froneb.com>
  * @year 2022
  */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Misc = void 0;
+const axios_1 = __importDefault(require("axios"));
 const helpers_1 = require("../helpers");
 class Misc {
     constructor({ client }) {
@@ -19,7 +23,7 @@ class Misc {
      * @returns
      */
     async getAllowedMethodes(currency) {
-        const res = await (0, helpers_1.http)({
+        const res = await (0, axios_1.default)({
             url: this.__client.url +
                 "/eshops/eshop/" +
                 this.__client.credentials.goID +
@@ -46,7 +50,7 @@ class Misc {
      * @returns
      */
     async accountStatement(data) {
-        const res = await (0, helpers_1.http)({
+        const res = await (0, axios_1.default)({
             url: this.__client.url + "/accounts/account-statement",
             method: "POST",
             headers: {

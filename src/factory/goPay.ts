@@ -6,8 +6,8 @@
  * @year 2022
  */
 
-import { Method } from "axios";
-import { createToken, handleError, http, with_gopay } from "../helpers";
+import axios, { Method } from "axios";
+import { createToken, handleError, safeError, with_gopay } from "../helpers";
 import { gopay } from "../types/gopay";
 
 export class GoPay {
@@ -31,7 +31,7 @@ export class GoPay {
     params.append("grant_type", "client_credentials");
     params.append("scope", "payment-create");
     const url = this.url + "/oauth2/token";
-    const res = await http({
+    const res = await axios({
       url,
       method: "POST",
       headers: {
@@ -71,10 +71,10 @@ export class GoPay {
       data: params,
     };
     try {
-      const res = await http(tokenRequest);
+      const res = await axios(tokenRequest);
       return res.data.access_token;
     } catch (error) {
-      handleError(error);
+      console.error("Problem creating the token", safeError(error));
       throw error;
     }
   }
