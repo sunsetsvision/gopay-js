@@ -6,12 +6,8 @@
  * @author Froneb s.r.o. <hello@froneb.com>
  * @year 2022
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GoPay = void 0;
-const axios_1 = __importDefault(require("axios"));
 const helpers_1 = require("../helpers");
 class GoPay {
     constructor({ credentials, enviroment, log }) {
@@ -29,7 +25,7 @@ class GoPay {
         params.append("grant_type", "client_credentials");
         params.append("scope", "payment-create");
         const url = this.url + "/oauth2/token";
-        const res = await (0, axios_1.default)({
+        const res = await (0, helpers_1.http)({
             url,
             method: "POST",
             headers: {
@@ -64,12 +60,11 @@ class GoPay {
             data: params,
         };
         try {
-            console.log("Getting token", tokenRequest);
-            const res = await (0, axios_1.default)(tokenRequest);
+            const res = await (0, helpers_1.http)(tokenRequest);
             return res.data.access_token;
         }
         catch (error) {
-            console.error("Problem creating the token", error);
+            (0, helpers_1.handleError)(error);
             throw error;
         }
     }

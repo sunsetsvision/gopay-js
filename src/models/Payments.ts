@@ -6,9 +6,9 @@
  * @year 2022
  */
 
-import axios, { Method } from "axios";
+import { Method } from "axios";
 import { GoPay } from "../factory/goPay";
-import { handleError } from "../helpers";
+import { handleError, http } from "../helpers";
 import { payments } from "../types/payments";
 
 export class Payments {
@@ -29,7 +29,7 @@ export class Payments {
     try {
       token = await this.__client.getAccessToken();
     } catch (error) {
-      console.error("Problem creating the token", error);
+      // already logged by getAccessToken
     }
     const paymentRequest = {
       url: this.__client.url + this.__sufix,
@@ -76,14 +76,14 @@ export class Payments {
       },
     };
     try {
-      const res = await axios(paymentRequest);
+      const res = await http(paymentRequest);
       if (res.status == 200) {
         return res.data;
       } else {
         if (this.__client.__log) handleError(res.data);
       }
     } catch (error) {
-      handleError(error as any);
+      handleError(error);
     }
   }
 
@@ -93,7 +93,7 @@ export class Payments {
    * @returns
    */
   async getStatus(payment_id: number) {
-    const res = await axios({
+    const res = await http({
       url: this.__client.url + this.__sufix + "/" + payment_id,
       method: "GET",
       headers: {
@@ -119,7 +119,7 @@ export class Payments {
     const params = new URLSearchParams();
     params.append("amount", String(amount));
 
-    const res = await axios({
+    const res = await http({
       url: this.__client.url + this.__sufix + "/" + payment_id + "/refund",
       method: "POST",
       headers: {
@@ -143,7 +143,7 @@ export class Payments {
    * @returns
    */
   async createRecurrence(data: payments.Recurrence) {
-    const res = await axios({
+    const res = await http({
       url: this.__client.url + this.__sufix,
       method: "POST",
       headers: {

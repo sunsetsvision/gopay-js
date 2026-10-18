@@ -6,12 +6,8 @@
  * @author Froneb s.r.o. <hello@froneb.com>
  * @year 2022
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Payments = void 0;
-const axios_1 = __importDefault(require("axios"));
 const helpers_1 = require("../helpers");
 class Payments {
     constructor({ client }) {
@@ -29,7 +25,7 @@ class Payments {
             token = await this.__client.getAccessToken();
         }
         catch (error) {
-            console.error("Problem creating the token", error);
+            // already logged by getAccessToken
         }
         const paymentRequest = {
             url: this.__client.url + this.__sufix,
@@ -74,7 +70,7 @@ class Payments {
             },
         };
         try {
-            const res = await (0, axios_1.default)(paymentRequest);
+            const res = await (0, helpers_1.http)(paymentRequest);
             if (res.status == 200) {
                 return res.data;
             }
@@ -93,7 +89,7 @@ class Payments {
      * @returns
      */
     async getStatus(payment_id) {
-        const res = await (0, axios_1.default)({
+        const res = await (0, helpers_1.http)({
             url: this.__client.url + this.__sufix + "/" + payment_id,
             method: "GET",
             headers: {
@@ -118,7 +114,7 @@ class Payments {
     async refundPayment(payment_id, amount) {
         const params = new URLSearchParams();
         params.append("amount", String(amount));
-        const res = await (0, axios_1.default)({
+        const res = await (0, helpers_1.http)({
             url: this.__client.url + this.__sufix + "/" + payment_id + "/refund",
             method: "POST",
             headers: {
@@ -142,7 +138,7 @@ class Payments {
      * @returns
      */
     async createRecurrence(data) {
-        const res = await (0, axios_1.default)({
+        const res = await (0, helpers_1.http)({
             url: this.__client.url + this.__sufix,
             method: "POST",
             headers: {
